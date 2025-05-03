@@ -3,13 +3,13 @@
 	url = ../rtems-libtecla.git
 [submodule "regexp"]
 	path = regexp
-	url = ../spencer-regexp_r.git
+	url = https://github.com/till-s/spencer-regexp_r.git
 [submodule "m4"]
 	path = m4
 	url = ../rtems-ac-macros.git
 [submodule "getopt"]
 	path = getopt
-	url = ../mygetopt_r.git
+	url = https://github.com/till-s/mygetopt_r.git
 [submodule "pmbfd"]
 	path = pmbfd
 	url = ../pmbfd.git
