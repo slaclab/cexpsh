@@ -61,6 +61,12 @@
  * SLAC Software Notices, Set 4 OTT.002a, 2004 FEB 03
  */ 
 
+#include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+static FILE* fp = NULL;
+
 #define MAXBITS 5
 
 #define UL 0
@@ -76,7 +82,7 @@ tnam(int mask)
 {
 int i;
 	for (i=1<<(MAXBITS-1); i; i>>=1)
-		printf("%c",mask&i ? typch[DB] : typch[UL]);
+		fprintf(fp, "%c",mask&i ? typch[DB] : typch[UL]);
 }
 
 static void
@@ -88,7 +94,7 @@ targs(int mask)
        */
 int i;
 	for (i=1<<(MAXBITS-1); i; i>>=1)
-		printf("%s%s",mask&i ? typ[DB] : typ[UL],i==1  ? "" : ",");
+		fprintf(fp, "%s%s",mask&i ? typ[DB] : typ[UL],i==1  ? "" : ",");
 #endif
 }
 
@@ -97,17 +103,17 @@ fnam(int mask)
 {
 int i;
 	for (i=1<<(MAXBITS-1); i; i>>=1)
-		printf("%c",mask&i ? ch[DB] : ch[UL]);
+		fprintf(fp, "%c",mask&i ? ch[DB] : ch[UL]);
 }
 
 static void
 protoargs(void)
 {
 int i;
-	printf("(AA f");
+	fprintf(fp, "(AA f");
 	for (i=1; i<=MAXBITS; i++)
-		printf(",AA a%i",i);
-	printf(")");
+		fprintf(fp, ",AA a%i",i);
+	fprintf(fp, ")");
 }
 
 static void
@@ -115,7 +121,7 @@ callargs(int mask)
 {
 int i,j;
 	for ((i=1<<(MAXBITS-1)),(j=1); i; i>>=1,j++) {
-		printf("%sa%i->tv.%c",
+		fprintf(fp, "%sa%i->tv.%c",
 			j>1?",":"",
 			j,
 			mask&i ? ch[DB] : ch[UL]);
@@ -124,24 +130,39 @@ int i,j;
 
 
 int
-main()
+main(int argc, char** argv)
 {
+	int opt;
+	while ((opt = getopt(argc, argv, "o:")) != -1) {
+		switch (opt) {
+		case 'o':
+			fp = fopen(optarg, "wb");
+			if (!fp) {
+				perror("fopen");
+				exit(1);
+			}
+			break;
+		default:
+			printf("Bad arg -'%c'\n", optopt);
+			exit(1);
+		}
+	}
 int mask;
-	printf("/* WARNING: DO NOT EDIT THIS AUTOMATICALLY-GENERATED FILE */\n");
-	printf("#define JUMPTAB_ARGLIST(args) ");
+	fprintf(fp, "/* WARNING: DO NOT EDIT THIS AUTOMATICALLY-GENERATED FILE */\n");
+	fprintf(fp, "#define JUMPTAB_ARGLIST(args) ");
 for (mask=0; mask < MAXBITS; mask++)
-	printf(",args[%i]",mask);
-	printf("\n");
-	printf("#define MAXBITS %i\n",MAXBITS);
+	fprintf(fp, ",args[%i]",mask);
+	fprintf(fp, "\n");
+	fprintf(fp, "#define MAXBITS %i\n",MAXBITS);
 for (mask=0; mask< (1<<MAXBITS); mask++) {
-	printf("typedef %s (*",typ[RES]); tnam(mask); printf(")("); targs(mask); printf(");\n");
-	printf("static  %s ",typ[RES]);    fnam(mask); protoargs(); printf("\n");
-	printf("{return (("); tnam(mask); printf(")f->tv.p)("); callargs(mask); printf(");}\n\n");
+	fprintf(fp, "typedef %s (*",typ[RES]); tnam(mask); fprintf(fp, ")("); targs(mask); fprintf(fp, ");\n");
+	fprintf(fp, "static  %s ",typ[RES]);    fnam(mask); protoargs(); fprintf(fp, "\n");
+	fprintf(fp, "{return (("); tnam(mask); fprintf(fp, ")f->tv.p)("); callargs(mask); fprintf(fp, ");}\n\n");
 }
-	printf("static UFUNC jumptab[%i]={\n",1<<MAXBITS);
+	fprintf(fp, "static UFUNC jumptab[%i]={\n",1<<MAXBITS);
 for (mask=0; mask < (1<<MAXBITS); mask++) {
-	printf("\t"); fnam(mask); printf(",\n");
+	fprintf(fp, "\t"); fnam(mask); fprintf(fp, ",\n");
 }
-	printf("};\n");
+	fprintf(fp, "};\n");
 return 0;
 }
