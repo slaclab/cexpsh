@@ -150,8 +150,6 @@ CexpSymXtraVeneerInfo xtra;
 			cesp->flags    |= CEXP_SYMFLG_VENR;
 
 			p += sz;
-
-			printf("veneer created for %s\n", cesp->name);
 		}
 	}
 
