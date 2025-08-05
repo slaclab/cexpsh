@@ -245,8 +245,6 @@ bail:
 
 #include "getopt/mygetopt_r.h"
 
-extern const char *cexp_build_date;
-
 #ifndef NO_THREAD_PROTECTION
 /* A lock for various purposes */
 static CexpLock cexpGblLock;
@@ -292,7 +290,7 @@ usage(const char *nm)
 static void
 version(const char *nm)
 {
-	fprintf(stderr,"This is CEXP release %s, build date %s\n", PACKAGE_VERSION, cexp_build_date);
+	fprintf(stderr,"This is CEXP release %s, build date %s at %s\n", PACKAGE_VERSION, __DATE__, __TIME__);
 }
 
 static void
