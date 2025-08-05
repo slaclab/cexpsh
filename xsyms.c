@@ -75,11 +75,37 @@
 #include "elf-bfd.h"
 #endif
 
+#ifndef PACKAGE_VERSION
+#define PACKAGE_VERSION __DATE__
+#endif
+
 #define LINKER_VERSION_SEPARATOR '@'
 #define DUMMY_ALIAS_PREFIX       "__cexp__dummy_alias_"
 
 #define FLTFLAG_SECTSYMS        (1<<0)
 #define FLTFLAG_UNDFSYMS        (1<<1)
+
+/* Compatibility with newer binutils */
+#ifndef _PMBFD_
+# ifndef bfd_get_section
+#   define bfd_get_section(x)((x)->section)
+# endif
+# ifndef bfd_set_section
+#   define bfd_set_section(x,y) ((x)->section) = (y)
+# endif
+# ifndef bfd_get_section_size
+#   define bfd_get_section_size(x) ((x)->size)
+# endif
+# ifndef bfd_get_section_vma
+#   define bfd_get_section_vma(bfd, x) ((x)->vma)
+# endif
+# ifndef bfd_get_section_name
+#   define bfd_get_section_name(bfd, x) ((x)->name)
+# endif
+# ifndef bfd_get_section_flags
+#   define bfd_get_section_flags(bdf, x) ((x)->flags)
+# endif
+#endif
 
 #ifdef _PMBFD_
 
