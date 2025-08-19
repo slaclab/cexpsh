@@ -105,6 +105,7 @@ SRCS+= elfdlmap.h
 SRCS+= cexpsegsP.h cexp_regex.h teclastuff.h rtems-hackdefs.h
 SRCS+= @srcdir@/getopt/mygetopt_r.c @srcdir@/getopt/mygetopt_r.h context.h
 SRCS+= help.c
+SRCS+= @srcdir@/bestline.c @srcdir@/bestline.h
 
 EXTRA_SRCS=
 EXTRA_SRCS+= cexpsegs.c cexpsegs-alloc.c

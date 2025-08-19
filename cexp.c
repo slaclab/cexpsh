@@ -119,6 +119,17 @@ int	 l;
 	}
 	return rval;
 }
+#elif defined(HAVE_BESTLINE)
+#include "bestline/bestline.h"
+
+static char *readline_r(char* prompt, void *context)
+{
+  return bestline(prompt);
+}
+
+#undef add_history
+#define add_history(line) bestlineHistoryAdd(line)
+
 #elif defined(HAVE_TECLA)
 
 #include "teclastuff.h"

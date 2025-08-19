@@ -379,7 +379,9 @@ if test ! "$enable_cexp" = "no" ; then
 	AC_CONFIG_SUBDIRS(regexp)
 
 	# check for line editor
-	if test ! "$enable_tecla" = "no" ; then
+	if test ! "$enable_bestline" = "no" ; then
+		AC_DEFINE(HAVE_BESTLINE,1,[the bestline library])
+	else if test ! "$enable_tecla" = "no" ; then
 		AC_CONFIG_SUBDIRS(libtecla)
 		AC_DEFINE(HAVE_TECLA,1,[the tecla (reentrant line editor) library])
 		AC_CHECK_LIB(curses,tgetnum,[LIBS="$LIBS -lcurses"],[AC_CHECK_LIB(ncurses,tgetnum,[LIBS="$LIBS -lncurses"])])
@@ -539,6 +541,7 @@ AM_CONDITIONAL(DO_CEXPLIB, [test ! "$enable_cexp"    = "no"])
 AM_CONDITIONAL(DO_DEMO,    [test "$host_os" = "$build_os" && test "$host_os" = "$target_os"])
 AM_CONDITIONAL(USEBFD,     [test ! "$enable_bfd"     = "no"])
 AM_CONDITIONAL(USETECLA,   [test ! "$enable_tecla"   = "no"])
+AM_CONDITIONAL(USEBESTLINE,[test ! "$enable_bestline" = "no"])
 AM_CONDITIONAL(USEOPCODES, [test ! "$enable_opcodes" = "no"])
 AM_CONDITIONAL(USELOADER,  [test ! "$enable_loader"  = "no"])
 AM_CONDITIONAL(USEPMBFD,   [test ! "$enable_pmbfd"   = "no"])
