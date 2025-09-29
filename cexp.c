@@ -87,6 +87,8 @@
 #include <mdbg.h>
 #endif
 
+#include "utils.h"
+
 /* on RTEMS, this is not always 0, due to strange redirection */
 #define STDIN_FD fileno(stdin)
 
@@ -565,12 +567,14 @@ va_list ap;
 int		argc=0;
 char	*argv[10]; /* limit to 10 arguments */
 char    *p;
+char    *subs = NULL;
 
 	va_start(ap,arg0);
 
 	argv[argc++]="cexp_main";
 	if (arg0) {
-		argv[argc++]=arg0;
+		subs = expand_macro_string_env(arg0);
+		argv[argc++]=subs;
 
 		while ( (p=va_arg(ap,char*)) ) {
 			
@@ -585,7 +589,9 @@ char    *p;
 	}
 
 	va_end(ap);
-	return cexp_main(argc,argv);
+	int r = cexp_main(argc,argv);
+	free(subs);
+	return r;
 }
 
 CexpSigHandlerInstallProc cexpSigHandlerInstaller=0;
