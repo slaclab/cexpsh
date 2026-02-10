@@ -77,7 +77,7 @@
 #define LEXERR_INCOMPLETE_STRING	(-100)
 extern int		cexplex();
 
-extern CexpSym	_cexpSymLookupRegex();
+extern CexpSym	_cexpSymLookupRegex(cexp_regex *, int *, CexpSym, FILE *, CexpModule *);
 
 int
 cexpSymComplete(WordCompletion *cpl, void *closure, const char *line, int word_end)

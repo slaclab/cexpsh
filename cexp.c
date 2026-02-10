@@ -346,7 +346,7 @@ cexp_regex	*rc=arg;
 int
 lkup(const char *re)
 {
-extern	CexpSym _cexpSymLookupRegex();
+extern CexpSym _cexpSymLookupRegex(cexp_regex *, int *, CexpSym, FILE *, CexpModule *);
 cexp_regex		*rc=0;
 CexpSym 		s;
 CexpModule		m;

@@ -710,7 +710,15 @@ CexpType t = TVoid;
 #define AA CexpTypedVal
 
 typedef UL (*UFUNC)();
+typedef UL (*U6TVFUNC)(CexpTypedVal, CexpTypedVal, CexpTypedVal,
+  CexpTypedVal, CexpTypedVal, CexpTypedVal);
+typedef UL (*U10FUNC)(UL, UL, UL, UL, UL, UL, UL, UL, UL, UL);
+typedef UL (*U_U10D8FUNC)(UL, UL, UL, UL, UL, UL, UL, UL, UL, UL, DB, DB, DB, DB, DB, DB, DB, DB);
 typedef DB (*DFUNC)();
+typedef DB (*D6TVFUNC)(CexpTypedVal, CexpTypedVal, CexpTypedVal, CexpTypedVal, CexpTypedVal, CexpTypedVal);
+typedef DB (*D10FUNC)(DB, DB, DB, DB, DB, DB, DB, DB, DB, DB);
+typedef DB (*D_U10D8FUNC)(UL, UL, UL, UL, UL, UL, UL, UL, UL, UL, DB, DB, DB, DB, DB, DB, DB, DB);
+
 
 #if defined(__PPC__) && defined(_CALL_SYSV) && !defined(_SOFT_FLOAT)
 
@@ -803,11 +811,11 @@ DB				dargs[MAXDBLARGS];
 		/* call it */
 		rval->type=CEXP_TYPE_PTR2BASE(fn->type);
 		if (TDFuncP==fn->type)
-			rval->tv.d=((DFUNC)fn->tv.p)(
+			rval->tv.d=((D_U10D8FUNC)fn->tv.p)(
 							iargs[0],iargs[1],iargs[2],iargs[3],iargs[4],iargs[5],iargs[6],iargs[7],iargs[8],iargs[9],
 							dargs[0],dargs[1],dargs[2],dargs[3],dargs[4],dargs[5],dargs[6],dargs[7]);
 		else
-			rval->tv.l=((UFUNC)fn->tv.p)(
+			rval->tv.l=((U_U10D8FUNC)fn->tv.p)(
 							iargs[0],iargs[1],iargs[2],iargs[3],iargs[4],iargs[5],iargs[6],iargs[7],iargs[8],iargs[9],
 							dargs[0],dargs[1],dargs[2],dargs[3],dargs[4],dargs[5],dargs[6],dargs[7]);
 
@@ -933,12 +941,12 @@ const char		*err=0;
 		rval->type=CEXP_TYPE_PTR2BASE(fn->type);
 		if (fpargs) {
 				if (TDFuncP==fn->type)
-					rval->tv.d=((DFUNC)(jumptab[fpargs]))(fn JUMPTAB_ARGLIST(args));
+					rval->tv.d=((D6TVFUNC)(jumptab[fpargs]))(fn JUMPTAB_ARGLIST(args));
 				else
-					rval->tv.l=jumptab[fpargs](fn,args[0],args[1],args[2],args[3],args[4]);
+					rval->tv.l=((U6TVFUNC)jumptab[fpargs])(fn,args[0],args[1],args[2],args[3],args[4]);
 		} else {
 				if (TDFuncP==fn->type)
-					rval->tv.d=((DFUNC)(fn->tv.p))(
+					rval->tv.d=((D10FUNC)(fn->tv.p))(
 										args[0]->tv.l,
 										args[1]->tv.l,
 										args[2]->tv.l,
@@ -951,7 +959,7 @@ const char		*err=0;
 										args[9]->tv.l);
 
 				else
-					rval->tv.l=((UFUNC)(fn->tv.p))(
+					rval->tv.l=((U10FUNC)(fn->tv.p))(
 										args[0]->tv.l,
 										args[1]->tv.l,
 										args[2]->tv.l,
