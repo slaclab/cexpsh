@@ -133,7 +133,7 @@
 ╚─────────────────────────────────────────────────────────────────────────────*/
 #include "bestline.h"
 
-#define _POSIX_C_SOURCE 1 /* so GCC builds in ANSI mode */
+#define _POSIX_C_SOURCE 200809L /* Enable strndup (requires POSIX) */
 #define _XOPEN_SOURCE 700 /* so GCC builds in ANSI mode */
 #define _DARWIN_C_SOURCE 1 /* so SIGWINCH / IUTF8 on XNU */
 #include <assert.h>
